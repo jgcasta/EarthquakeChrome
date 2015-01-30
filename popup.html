@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+		<style>
+	.resaltar {
+		font-family: Courier New;
+		font-size: 11px;
+		color: #663300;
+		border-collapse: collapse;
+		background-color: #F4F4EA;
+		border: 1px dotted #8D8D47;
+		padding: 8px;
+	}	
+
+	</style>
+  </head>
+
+  <body onload="init()" onunload="GUnload()">
+  	<div class="resaltar">
+	<div id="map_canvas" style="width: 600px; height: 400px"></div><br />
+	<center><b>Last 50 Earthquake Activity over the world</b></center>
+	<div id="map_canvas1" style="width: 600px; height: 400px"></div>
+	</div>
+	<script>
+/*
+	Earthquake Alert
+	
+	José Gómez Castaño
+	jgcasta@gmail.com
+	ver. 0.5 - 2012 April, 29
+	
+	license GPL v3
+
+*/
+
+	var title;
+	var link1;
+	var lat;
+	var lon;
+	var depth;
+	var mag;
+	var date;
+	var comment;
+	var desc;
+	var connection = true;
+	var texto = document.getElementById("capa1");
+	
+	//chrome.browserAction.setBadgeText({text:""});
+	
+	try{
+	var req = new XMLHttpRequest();
+	req.open("GET","http://www.emsc-csem.org/service/rss/rss.php?typ=emsc" ,true);
+	req.onload = function(){
+
+	    if(req.readyState == 4 && req.status == 200)
+	    {
+		ver();
+	    }else{
+		alert('Check your Internet Connection')
+	    }
+
+	}
+
+	req.send(null);
+	}catch (e){
+		alert('Error ' + e);
+	}
+
+
+	
+	function ver(){
+
+		var xmlDoc = req.responseXML.documentElement;
+
+		var indice = 0;
+		
+		title = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagName("title")[0].firstChild.nodeValue;
+		link1 = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagName("link")[0].firstChild.nodeValue;
+		lat = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagNameNS("http://www.w3.org/2003/01/geo/","lat")[0].childNodes[0].nodeValue;
+		lon = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagNameNS("http://www.w3.org/2003/01/geo/","long")[0].childNodes[0].nodeValue;
+		depth = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagNameNS("http://www.emsc-csem.org","depth")[0].childNodes[0].nodeValue;
+		mag = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagNameNS("http://www.emsc-csem.org","magnitude")[0].childNodes[0].nodeValue;
+		date = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagNameNS("http://www.emsc-csem.org","time")[0].childNodes[0].nodeValue;
+		comment = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagName("comments")[0].firstChild.nodeValue;	  
+		desc = xmlDoc.getElementsByTagName("item")[indice].getElementsByTagName("description")[0].firstChild.nodeValue;	
+		
+		chrome.browserAction.setBadgeText({text:""});
+
+		
+	
+	}	
+
+	
+	</script>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+    
+	function init(){
+		window.setTimeout(initialize, 1000);
+	}
+	
+    function initialize() {
+
+      if (GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map_canvas"));
+		map.addControl(new GLargeMapControl());
+		map.addControl(new GMapTypeControl());
+		map.addControl(new GScaleControl()) ;
+		map.addMapType(G_PHYSICAL_MAP);
+		map.setMapType(G_PHYSICAL_MAP);
+
+	
+		// Relief Map from www.maps-for-free.com
+		var min = 0;
+		var max = 12;
+
+		var license = "<a href='http://www.maps-for-free.com/html/about.html' target='_blank'>License</a>";
+		var copyright = new GCopyright(1, new GLatLngBounds(new GLatLng(-90, -180), new GLatLng(90, 180)), 0, license);
+		var copyrightCollection = new GCopyrightCollection("Relief");
+		copyrightCollection.addCopyright(copyright);
+
+		var relief = [new GTileLayer(copyrightCollection, min, max)];
+		relief[0].getTileUrl = function(a,b) {
+		  return "http://maps-for-free.com/layer/relief/z" + b + "/row" + a.y + "/" + b + "_" + a.x + "-" + a.y + ".jpg"; };
+		reliefLayer = new GMapType(relief, G_SATELLITE_MAP.getProjection(), "Relief", {minResolution:min, maxResolution:max});
+		map.addMapType(reliefLayer);
+		
+		var latlng = new GLatLng(lat,lon);
+
+        map.setCenter(latlng, 2);
+ 
+		function createMarker(latlng) {
+		  var marker = new GMarker(latlng);
+		  
+		  GEvent.addListener(marker,"click", function() {
+			
+			var myHtml = "<b>" + title + "</b><br/><a href='javascript:openLink()'>More Information</a><br>" ;
+			if ( date != undefined){myHtml += "Date: " + date+ "<br>"}
+			myHtml += mag + "<br>";
+			myHtml += "Depth: " + depth + " Km<br>";
+			//if ( comment != undefined){myHtml += comment + "<br>"}
+			if ( desc != undefined){myHtml += desc + "<br>"}
+			
+			map.openInfoWindowHtml(latlng, myHtml);
+			map.setCenter(latlng, 6);
+		  });
+		  
+		  return marker;
+		}
+
+        map.addOverlay(createMarker(latlng));
+
+		// todos
+  	    geoXml = new GGeoXml("http://www.emsc-csem.org/service/rss/rss.php?typ=emsc");
+        var map1 = new GMap2(document.getElementById("map_canvas1"));
+        map1.setCenter(new GLatLng(40,-3), 2); 
+		map1.addControl(new GLargeMapControl());
+		map1.addControl(new GMapTypeControl());
+		map1.addControl(new GScaleControl()) ;
+		map1.addMapType(G_PHYSICAL_MAP);
+		map1.setMapType(G_PHYSICAL_MAP);	
+		map1.addMapType(reliefLayer);		
+        map1.addOverlay(geoXml);		
+
+
+
+      }
+    }
+	
+
+	function openLink(){
+		chrome.tabs.create({url:link1}); 
+	}
+    </script>
+	
+  </body>
+</html>

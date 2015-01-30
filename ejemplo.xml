@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"  xmlns:geo="http://www.w3.org/2003/01/geo/" xmlns:emsc="http://www.emsc-csem.org" ><channel> 
+<title>EMSC - Last 50 earthquakes worldwide</title> 
+<link>http://www.emsc-csem.org/</link> 
+<description>Real-time, last 50 earthquakes worldwide</description> 
+<language>en</language> 
+<image>	
+	<title>EMSC - CSEM</title>	
+	<url>http://static1.csem.eu/Images/emsc_200.png</url>	
+	<link>http://www.emsc-csem.org</link>
+</image>
+<generator>EMSC - CSEM</generator> 
+<copyright>EMSC - CSEM</copyright> 
+<item>
+	<title>ML 2.2  AEGEAN SEA</title>
+	<link>http://www.emsc-csem.org/Earthquake/earthquake.php?id=200095</link>
+	<geo:lat>39.36</geo:lat>
+	<geo:long>23.18</geo:long>
+	<emsc:depth>5  </emsc:depth>
+	<emsc:magnitude>ML 2.2</emsc:magnitude>
+	<emsc:time>2010-11-21 18:18:48 UTC</emsc:time>
+	<pubDate>Sun, 21 Nov 2010 18:22:00 +0000</pubDate>
+	<guid>http://www.emsc-csem.org/Earthquake/earthquake.php?id=200095</guid>
+	<comments>2010-11-21 18:18:48 UTC</comments>
+	<description><![CDATA[ <table><tr><td><table cellpadding="0" cellspacing="0" border="0" style="margin-top:5px; font-size:11px;"><tr><td style="padding-right:4px">Magnitude</td><td class="point2">&nbsp;&nbsp;ML 2.2</td></tr><tr><td style="padding-right:4px">Region</td><td class="point2">&nbsp;&nbsp;AEGEAN SEA</td></tr><tr><td style="padding-right:4px">Date time</td><td class="point2">&nbsp;&nbsp;2010-11-21   18:18:48.3 UTC</td></tr><tr><td style="padding-right:4px">Location</td><td class="point2">&nbsp;&nbsp;39.36 N ; 23.18 E</td></tr><tr><td style="padding-right:4px">Depth</td><td class="point2">&nbsp;&nbsp;5 km</td></tr></table></td></tr></table>]]></description>
+</item> 
+
+</channel></rss>

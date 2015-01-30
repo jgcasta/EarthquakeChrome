@@ -1,0 +1,100 @@
+<html>
+<head><title>Earthquakes Alert</title></head>
+<style>
+	.resaltar {
+		font-family: Courier New;
+		font-size: 11px;
+		color: #663300;
+		border-collapse: collapse;
+		background-color: #F4F4EA;
+		border: 1px dotted #8D8D47;
+		padding: 8px;
+	}	
+
+</style>
+
+<body >
+
+<form name="f1">
+<div class="resaltar" style="width:600" align="center">
+    <table width="64%" border="0">
+      <tr> 
+        <td colspan="2"><div align="center"><font face="Courier New, Courier, mono"><strong>Earthquake 
+            Alert Options</strong></font></div></td>
+      </tr>
+      <tr valign="middle"> 
+        <td width="49%"><font face="Courier New, Courier, mono">Minimun Richter 
+          alert</font></td>
+        <td width="51%"> <font face="Courier New, Courier, mono"> 
+          <input name="minrichter" type="text" size="5" maxlength="1">
+          </font></td>
+      </tr>
+      <tr valign="middle"> 
+        <td><font face="Courier New, Courier, mono"> Reload every<br>
+          </font></td>
+        <td> <font face="Courier New, Courier, mono"> 
+          <input name="reloadMin" type="text" size="5" maxlength="3">
+          minutes </font></td>
+      </tr>
+      <tr> 
+        <td colspan="2"><input type="button" name="guardar" value="Save" onClick="save_options()"> 
+          <div id="status"></div></td>
+      </tr>
+    </table>
+ 
+  </div>
+
+
+</form>
+  <br>
+</p>
+<script type="text/javascript">
+/*
+	Earthquake Alert
+	
+	José Gómez Castaño
+	jgcasta@gmail.com
+	ver. 0.2 - 22 march 2010
+	
+	license GPL v3
+
+*/
+
+var minrichter;
+var reloadMin;
+
+try{
+	if(window.localStorage.getItem('minrichter') != null){
+		document.f1.minrichter.value = window.localStorage.getItem('minrichter');
+	}else{
+		document.f1.minrichter.value = 0;
+	}
+}catch(e){
+	window.localStorage.setItem('minrichter', '0');
+}
+
+try{
+	if(window.localStorage.getItem('reloadMin') != null){
+		document.f1.reloadMin.value = window.localStorage.getItem('reloadMin') / 60000;
+	}else{
+		document.f1.reloadMin.value =  60000;
+	}
+}catch(e){
+	window.localStorage.setItem('reloadMin', '600000');
+}
+
+
+function save_options() {
+
+  localStorage["minrichter"] = document.f1.minrichter.value;
+  localStorage["reloadMin"] = document.f1.reloadMin.value  * 60000;
+
+  var status = document.getElementById("status");
+  status.innerHTML = "<b>Options Saved.</b>";
+
+}
+
+
+</script>
+</body>
+</html>

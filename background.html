@@ -1,0 +1,83 @@
+<html>
+<head></head>
+<body>
+
+<script>
+/*
+	Earthquake Alert
+	
+	José Gómez Castaño
+	jgcasta@gmail.com
+	ver. 0.5 - 29th april 2012
+	
+	license GPL v3
+
+*/
+
+	var minrichter;
+	var reloadMin;
+	
+	try{
+		if(window.localStorage.getItem('minrichter') != null){
+			minrichter = window.localStorage.getItem('minrichter');
+		}else{
+			window.localStorage.setItem('minrichter', '0');
+			minrichter = 0;		
+		}
+	}catch(e){
+		window.localStorage.setItem('minrichter', '0');
+		minrichter = 0;
+	}
+	
+	try{
+		if(window.localStorage.getItem('reloadMin') != null){
+			reloadMin = window.localStorage.getItem('reloadMin');
+		}else{
+			window.localStorage.setItem('reloadMin', '600000');
+			reloadMin = 600000;		
+		}
+	}catch(e){
+		window.localStorage.setItem('reloadMin', '600000');
+		reloadMin = 600000;
+	}
+
+
+	var id = "";
+	var id0 = "";
+	var req;
+	var mag;
+	pedir();
+	
+	window.setInterval(pedir, reloadMin);
+	
+	function pedir(){
+
+		minrichter = window.localStorage.getItem('minrichter');
+		reloadMin = window.localStorage.getItem('reloadMin');
+
+		var texto = document.getElementById("capa1");
+
+		var req = new XMLHttpRequest();
+			
+		req.open("GET","http://www.emsc-csem.org/service/rss/rss.php?typ=emsc" ,true);
+
+		req.onload = function ver(){
+			
+			var xmlDoc = req.responseXML.documentElement;
+			id = xmlDoc.getElementsByTagName("item")[0].getElementsByTagName("title")[0].firstChild.nodeValue;
+			mag = xmlDoc.getElementsByTagName("item")[0].getElementsByTagNameNS("http://www.emsc-csem.org","magnitude")[0].childNodes[0].nodeValue;
+			mag = mag.substring(3,6);
+			if ((id0 != id) && (mag >= minrichter)){
+				chrome.browserAction.setBadgeText({text:"N"});
+				id0 = id;
+			}
+			id = "";
+			}
+		req.send(null);
+	}
+
+
+
+</script>
+</body>
+</html>
