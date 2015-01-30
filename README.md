@@ -1,3 +1,5 @@
+Chrome Extension to monitor Earthquakes
+=======================================
 Get the last earthquake on the earth from European-Mediterranean Seismological Centre, on a Google Maps with more info on a new Tab
 This extension alerts and shows the last earthquake on the earth, it reads information from European-Mediterranean Seismological Centre. 
 
